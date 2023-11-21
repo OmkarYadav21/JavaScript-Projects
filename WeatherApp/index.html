@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather App</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="card">
+        <div class="search">
+            <input type="text" id="city" placeholder="enter city name:" spellcheck="false">
+            <button onclick="checkWeather()"><img src="images/search.png" alt=""></button>
+        </div>
+        <div class="weather">
+            <img src="images/rain.png" class="weather-icon" alt="">
+            <h1 class="temp">°C</h1>
+            <h2 class="city">City</h2>
+            <div class="details">
+                <div class="col">
+                    <img src="images/humidity.png" alt="">
+                    <div>
+                        <p class="humidity">00</p>
+                        <p>Humidity</p>
+                    </div>
+                    
+                </div>
+                <div class="col">
+                    <img src="images/wind.png" alt="">
+                    <div>
+                        <p class="wind">00 km/h</p>
+                        <p>Wind Speed</p>
+                    </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        const apiKey='YZGQNRFQ3UB67ZSZRSLCLTG84';
+        const apiUrl='https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/pune/21-11-2023?key=YZGQNRFQ3UB67ZSZRSLCLTG84&include=current';
+        async function checkWeather() {
+            let city=document.getElementById('city').value;
+            let currentDate = new Date().toJSON().slice(0, 19);
+            let weathericon=document.querySelector('.weather-icon');
+            try {
+                const response=await fetch(`https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${city}/${currentDate}?key=YZGQNRFQ3UB67ZSZRSLCLTG84&include=current`);
+                var data=await response.json();
+                console.log(data);
+                // console.log(currentDate);
+                document.querySelector('.city').innerHTML=data.address;
+                document.querySelector('.temp').innerHTML=Math.round(data.currentConditions.temp)+"°C";
+                document.querySelector('.humidity').innerHTML=data.currentConditions.humidity+"%";
+                document.querySelector('.wind').innerHTML=data.currentConditions.windspeed+"km/h";
+                if(data.currentConditions.conditions=='Partially cloudy'){
+                    weathericon.src='images/clouds.png';
+                }else if(data.currentConditions.conditions=='Clear'){
+                    weathericon.src='images/clear.png';
+                }else if(data.currentConditions.conditions=='Rain'){
+                    weathericon.src='images/rain.png';
+                }else if(data.currentConditions.conditions=='Drizzle'){
+                    weathericon.src='images/drizzle.png';
+                }else if(data.currentConditions.conditions=='Mist'){
+                    weathericon.src='images/mist.png';
+                }else if(data.currentConditions.conditions=='Snow'){
+                    weathericon.src='images/snow.png';
+                }
+
+            } catch (error) {
+               console.log(error); 
+            }
+            
+            
+        }
+    </script>
+</body>
+</html>
